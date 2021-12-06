@@ -29,7 +29,7 @@ export default function Product({product}) {
                     {product.time}
                     </div>
                 </div>
-                <div className="truncate product-card-discription"x>
+                <div className="truncate product-card-discription">
                     {product.discription}
                 </div>
             </div>
