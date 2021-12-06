@@ -16,3 +16,57 @@
 .edvora {
   background: #292929;
 }
+.product-card {
+  width: 230px;
+  height: 170px;
+  transition: .4s all;
+}
+.product-card:hover {
+  padding: unset;
+  transition: .4s all;
+}
+.product-card-body {
+  font-family: serif;
+  background: #232323;
+  border-radius: 5px;
+}
+.product-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 5px;
+}
+.product-name {
+  font-size: 15px;
+  line-height: 18px;
+}
+.product-card-text {
+  font-size: 13px;
+  line-height: 16px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.product-card-price {
+  font-size: 13px;
+  line-height: 15px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.product-card-date {
+  font-size: 11px;
+  line-height: 13px;
+}
+.product-card-discription {
+  font-size: 11px;
+  line-height: 13px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.products-title {
+  color: rgba(255, 255, 255, 0.5);
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+.product-brand {
+  border-bottom: 1px solid #666;
+}
+.product-list-body {
+  height: 190px;
+  background: #131313;
+  border-radius: 15px;
+}
