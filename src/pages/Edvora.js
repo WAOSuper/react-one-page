@@ -2,14 +2,13 @@ import React, {useState, useEffect} from 'react'
 import ListByBrand from '../components/ListByBrand'
 import ListByAll from '../components/ListByAll'
 import Filter from '../components/Filter'
-import originData from './data'
 import "react-multi-carousel/lib/styles.css"
 import axios from 'axios';
 
 export default function Edvora() {
-  const baseURL = 'https://assessment-edvora.herokuapp.com/'
+  const baseURL = 'http://localhost:3000/data.json'
   
-  const [data, setData] = useState(originData)
+  const [data, setData] = useState([])
   const [filterVal, setFilterVal] = useState([])
 
   const allBrands = data.map(item => item.brand_name)
@@ -46,16 +45,17 @@ export default function Edvora() {
 
   useEffect(() => {
     axios.get(baseURL).then((response) => {
-      console.log(response);
-      // setData(response.data);
+      setData(response.data);
     });
+  }, [])
+  useEffect(() => {
+    
     const filterVal = data.filter(item => 
       item.brand_name.indexOf(productFilterVal) > -1 &&
       item.address.state.indexOf(stateFilterVal) > -1 &&
       item.address.city.indexOf(cityFilterVal) > -1
     )
     setFilterVal(filterVal)
-    console.log(filterVal);
   }, [productFilterVal, stateFilterVal, cityFilterVal, data])
 
   return (
