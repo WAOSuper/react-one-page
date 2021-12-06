@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react'
-import Menu from '../components/Menu'
+import ListByBrand from '../components/ListByBrand'
+import ListByAll from '../components/ListByAll'
+import Filter from '../components/Filter'
 import originData from './data'
-import Carousel from 'react-multi-carousel'
 import "react-multi-carousel/lib/styles.css"
+import axios from 'axios';
 
 export default function Edvora() {
-
+  const baseURL = 'https://assessment-edvora.herokuapp.com/'
   
   const [data, setData] = useState(originData)
   const [filterVal, setFilterVal] = useState([])
@@ -34,24 +36,6 @@ export default function Edvora() {
     }
   })
 
-  const responsive = {
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 6,
-      slidesToSlide: 1, // optional, default to 1.
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 4,
-      slidesToSlide: 1 // optional, default to 1.
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 3,
-      slidesToSlide: 1 // optional, default to 1.
-    }
-  };
-
   const [productFilter, setProductFilter] = useState(false)
   const [stateFilter, setStateFilter] = useState(false)
   const [cityFilter, setCityFilter] = useState(false)
@@ -60,15 +44,19 @@ export default function Edvora() {
   const [stateFilterVal, setStateFilterVal] = useState("")
   const [cityFilterVal, setCityFilterVal] = useState("")
 
-
   useEffect(() => {
+    axios.get(baseURL).then((response) => {
+      console.log(response);
+      // setData(response.data);
+    });
     const filterVal = data.filter(item => 
       item.brand_name.indexOf(productFilterVal) > -1 &&
       item.address.state.indexOf(stateFilterVal) > -1 &&
       item.address.city.indexOf(cityFilterVal) > -1
     )
     setFilterVal(filterVal)
-  }, [productFilterVal, stateFilterVal, cityFilterVal])
+    console.log(filterVal);
+  }, [productFilterVal, stateFilterVal, cityFilterVal, data])
 
   return (
     <div className="fixed inset-0 overflow-auto edvora" onTouchEnd={e => console.log(e)} onClick={(e) => {
@@ -78,121 +66,61 @@ export default function Edvora() {
         setCityFilter(false)
       }
     }}>
-      <div className="w-full relative p-8 text-white grid grid-cols-5 gap-4">
-        <div>
-          <div className="w-full rounded-lg p-4 bg-gray-900">
-            <div className="text-gray-400 mb-5 pb-3" style={{borderBottom:'1px solid #666'}}>
-              Filters
-            </div>
-            <div className="mb-3 relative">
-              <button 
-                id="productFilter"
-                className="w-full relative text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-600 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center" type="button" data-dropdown-toggle="dropdown"
-                onClick={() => {
-                  setProductFilter(!productFilter)
-                  setStateFilter(false)
-                  setCityFilter(false)
-                }}
-              >
-                {
-                  productFilterVal === "" ? "Products" : productFilterVal
-                }
-                <svg className="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-              </button>
-              <Menu
-                show={productFilter}
-                data={brands}
-                setItem={setProductFilterVal}
-                setShow={setProductFilter}
-              />
-            </div>
-            <div className="mb-3 relative">
-              <button 
-                id="stateFilter"
-                className="w-full relative text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-600 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center" type="button" data-dropdown-toggle="dropdown"
-                onClick={() => {
-                  setProductFilter(false)
-                  setStateFilter(!stateFilter)
-                  setCityFilter(false)
-                }}
-              >
-                
-                {
-                  stateFilterVal === "" ? "States" : stateFilterVal
-                }
-                <svg className="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-              </button>
-              <Menu
-                show={stateFilter}
-                data={states}
-                setItem={setStateFilterVal}
-                setShow={setStateFilter}
-              />
-            </div>
-            <div className="mb-3 relative">
-              <button 
-                id="cityFilter"
-                className="w-full relative text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-600 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center" type="button" data-dropdown-toggle="dropdown"
-                onClick={() => {
-                  setProductFilter(false)
-                  setStateFilter(false)
-                  setCityFilter(!cityFilter)
-                }}
-              >
-                
-                {
-                  cityFilterVal === "" ? "Citys" : cityFilterVal
-                }
-                <svg className="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-              </button>
-              <Menu
-                show={cityFilter}
-                data={citys}
-                setItem={setCityFilterVal}
-                setShow={setCityFilter}
-              />
-            </div>
-          </div>
+      <div className="w-full relative p-8 text-white grid grid-cols-5 gap-4 max-w-screen-xl m-auto">
+        <div className='col-span-2 md:col-span-1'>
+          <Filter 
+            productFilter = {productFilter}
+            stateFilter = {stateFilter}
+            cityFilter = {cityFilter}
+            brands = {brands}
+            states = {states}
+            citys = {citys}
+            productFilterVal = {productFilterVal}
+            stateFilterVal = {stateFilterVal}
+            cityFilterVal = {cityFilterVal}
+            setProductFilter = {setProductFilter}
+            setStateFilter = {setStateFilter}
+            setCityFilter = {setCityFilter}
+            setProductFilterVal = {setProductFilterVal}
+            setStateFilterVal = {setStateFilterVal}
+            setCityFilterVal = {setCityFilterVal}
+          />
         </div>
-        <div className="col-span-4">
-          <div className="text-2xl mb-4">
+        <div className="col-span-3 md:col-span-4">
+          <div className="text-4xl mb-5">
             Edvora
           </div>
-          <div className="text-xl mb-4 text-gray-600">
+          <div className="text-2xl mb-5 products-title">
             Products
           </div>
-          
-          <div className="text-lg mb-4 pb-3" style={{borderBottom:'1px solid #666'}}>
-            {
-              productFilterVal === "" ? "Product Name" : productFilterVal
-            }
-          </div>
-            {
-              filterVal.length > 0 ? (
-
-                <div>
-                <Carousel
-                  swipeable={true}
-                  draggable={true}
-                  responsive={responsive}
-                  infinite
-                  autoPlay={true}
-                  autoPlaySpeed={5000}
-                  transitionDuration={1000}
-                >
-                  {filterVal.map((product, index) => (
-                    <div key={'product' + index} className="p-2 pt-0 pb-0 select-none">
-                      <img src={product.image} draggable="false" className="w-100 cursor-pointer" />
-                    </div>
-                  ))}
-                </Carousel>
+          {
+            productFilterVal === "" && brands.map((brand,bIndex) => (
+              <ListByBrand
+                key = {bIndex}
+                brand = {brand}
+                product = {filterVal}
+              />
+            ))
+          }
+          {
+            productFilterVal && filterVal.length > 0 ? (
+              <ListByAll
+                brand={productFilterVal} 
+                products = {filterVal}
+              />
+            ) : productFilterVal ? (
+              <>
+              <div className="text-xl mb-5 pb-3 product-brand">
+                {productFilterVal}
               </div>
-              ) : (
-                <div>
-                  no items
-                </div>
-              )
-            }
+              <div className='w-full flex items-center justify-center product-list-body'>
+                No matched items
+              </div>
+              </>
+            ) : (
+              <></>
+            )
+          }
         </div>
       </div>
     </div>
